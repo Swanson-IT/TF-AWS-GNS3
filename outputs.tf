@@ -1,6 +1,6 @@
 output "vpc_id" {
   description = "The ID of the created VPC"
-  value = aws_vpc.vpc.id
+  value       = aws_vpc.vpc.id
 }
 
 output "subnet_ids" {
@@ -15,5 +15,5 @@ output "ecs_cluster_name" {
 
 output "ecs_service_name" {
   description = "Name of the ECS service"
-  value = aws_ecs_service.service.name
+  value       = aws_ecs_service.service.name
 }
