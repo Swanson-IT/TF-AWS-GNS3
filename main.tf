@@ -1,10 +1,10 @@
 # ---------------------
 # VPC
 # ---------------------
-resource "aws_vpc" "ecs_vpc" {
+resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
   tags = {
-    Name = "gns3-ecs-vpc"
+    Name = "gns3-vpc"
   }
 }
 
@@ -12,28 +12,28 @@ resource "aws_vpc" "ecs_vpc" {
 # SUBNETS
 # ---------------------
 resource "aws_subnet" "private_subnet_1" {
-  vpc_id            = aws_vpc.ecs_vpc.id
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = var.private_subnet_1_cidr
   availability_zone = "${var.aws_region}a"
   tags = {
-    Name = "private-subnet-1"
+    Name = "gns3-private-subnet-1"
   }
 }
 
 resource "aws_subnet" "private_subnet_2" {
-  vpc_id            = aws_vpc.ecs_vpc.id
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = var.private_subnet_2_cidr
   availability_zone = "${var.aws_region}b"
   tags = {
-    Name = "private-subnet-2"
+    Name = "gns3-private-subnet-2"
   }
 }
 
 # ---------------------
 # SECURITY GROUP
 # ---------------------
-resource "aws_security_group" "gns3_sg" {
-  vpc_id = aws_vpc.ecs_vpc.id
+resource "aws_security_group" "sg" {
+  vpc_id = aws_vpc.vpc.id
   name   = "gns3-sg"
 
   ingress {
@@ -59,13 +59,13 @@ resource "aws_security_group" "gns3_sg" {
 # ECS CLUSTER
 # ---------------------
 resource "aws_ecs_cluster" "cluster" {
-  name = "gns3-ecs-cluster"
+  name = "gns3-cluster"
 }
 
 # ---------------------
 # ECS TASK DEFINITION
 # ---------------------
-resource "aws_ecs_task_definition" "gns3_task" {
+resource "aws_ecs_task_definition" "task" {
   family                   = "gns3-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -98,14 +98,6 @@ resource "aws_ecs_task_definition" "gns3_task" {
           readOnly      = false
         }
       ]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          "awslogs-group"         = "/ecs/gns3-container"
-          "awslogs-region"        = var.aws_region
-          "awslogs-stream-prefix" = "ecs"
-        }
-      }
     }
   ])
 
@@ -121,16 +113,16 @@ resource "aws_ecs_task_definition" "gns3_task" {
 # ---------------------
 # ECS SERVICE
 # ---------------------
-resource "aws_ecs_service" "gns3_service" {
+resource "aws_ecs_service" "service" {
   name            = "gns3-service"
   cluster         = aws_ecs_cluster.cluster.id
-  task_definition = aws_ecs_task_definition.gns3_task.arn
+  task_definition = aws_ecs_task_definition.task.arn
   launch_type     = "FARGATE"
 
   network_configuration {
     subnets          = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id]
     assign_public_ip = true
-    security_groups  = [aws_security_group.gns3_sg.id]
+    security_groups  = [aws_security_group.sg.id]
   }
 
   desired_count = var.task_count
