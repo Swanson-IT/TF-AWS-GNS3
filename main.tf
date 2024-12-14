@@ -68,7 +68,7 @@ resource "aws_security_group" "gns3_sg" {
 
   ingress {
     from_port   = var.container_port
-    to_port     = var.containevr_port
+    to_port     = var.container_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
