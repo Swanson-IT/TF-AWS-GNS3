@@ -110,7 +110,7 @@ resource "aws_ecs_task_definition" "gns3_task" {
   ])
 
   volume {
-    name = "gns3-data"
+    name      = "gns3-data"
     host_path = null
   }
 

@@ -1,6 +1,3 @@
-# ---------------------
-# VARIABLES
-# ---------------------
 variable "aws_region" {
   description = "AWS Region"
   type        = string
@@ -24,23 +21,29 @@ variable "private_subnet_2_cidr" {
 variable "task_cpu" {
   description = "CPU units for the ECS task"
   type        = number
-  default     = 512
 }
 
 variable "task_memory" {
   description = "Memory (in MiB) for the ECS task"
   type        = number
-  default     = 1024
 }
 
 variable "container_port" {
   description = "Container port to expose"
   type        = number
-  default     = 80
 }
 
 variable "task_count" {
   description = "Number of ECS tasks to run"
   type        = number
-  default     = 1
+}
+
+variable "execution_role_arn" {
+  description = "The ARN of the execution role for ECS tasks"
+  type        = string
+}
+
+variable "task_role_arn" {
+  description = "The ARN of the task role for ECS tasks"
+  type        = string
 }
