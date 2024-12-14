@@ -1,39 +1,46 @@
+# ---------------------
+# VARIABLES
+# ---------------------
 variable "aws_region" {
-  description = "The AWS region where resources will be deployed."
+  description = "AWS Region"
   type        = string
 }
 
 variable "vpc_cidr" {
-  description = "CIDR block for the VPC."
+  description = "CIDR block for the VPC"
   type        = string
 }
 
 variable "private_subnet_1_cidr" {
-  description = "CIDR block for the first private subnet."
+  description = "CIDR block for the first private subnet"
   type        = string
 }
 
 variable "private_subnet_2_cidr" {
-  description = "CIDR block for the second private subnet."
+  description = "CIDR block for the second private subnet"
   type        = string
 }
 
 variable "task_cpu" {
-  description = "CPU units to assign to the ECS task."
+  description = "CPU units for the ECS task"
   type        = number
+  default     = 512
 }
 
 variable "task_memory" {
-  description = "Memory to allocate to the ECS task."
+  description = "Memory (in MiB) for the ECS task"
   type        = number
-}
-
-variable "task_count" {
-  description = "Number of ECS tasks to run."
-  type        = number
+  default     = 1024
 }
 
 variable "container_port" {
-  description = "Port exposed by the GNS3 container."
+  description = "Container port to expose"
   type        = number
+  default     = 80
+}
+
+variable "task_count" {
+  description = "Number of ECS tasks to run"
+  type        = number
+  default     = 1
 }
